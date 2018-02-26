@@ -60,3 +60,5 @@ prod-env.json
 
 # next.js build output
 .next
+
+claudia.json
