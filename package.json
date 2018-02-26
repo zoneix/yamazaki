@@ -2,15 +2,15 @@
   "name": "yamazaki",
   "version": "1.0.0",
   "description": "Sample NodeJS Express micro-service to create Cisco Spark Guest Tokens on AWS Lambda using Amazon API Gateway and ClaudiaJS.",
-  "main": "yamazaki.js",
+  "main": "lambda.js",
   "scripts": {
-    "deploy": "claudia create --handler yamazaki.handler --deploy-proxy-api --region us-east-1",
+    "deploy": "claudia create --handler lambda.handler --deploy-proxy-api --region us-east-1",
     "update": "claudia update",
     "generate-proxy": "claudia generate-serverless-express-proxy --express-module app"
   },
   "license": "MIT",
   "dependencies": {
-    "aws-serverless-express": "^1.1.0",
+    "aws-serverless-express": "^1.3.0",
     "express": "^4.14.0"
   },
   "devDependencies": {
