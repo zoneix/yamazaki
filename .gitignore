@@ -62,3 +62,5 @@ prod-env.json
 .next
 
 claudia.json
+
+test.js

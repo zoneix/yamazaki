@@ -1,0 +1,94 @@
+'use strict';
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+const jsonwebtoken = require("jsonwebtoken");
+const randomstring = require("randomstring"); 
+const fetch = require("node-fetch");
+
+const iss = process.env.GUESTISSID;
+const secret = process.env.GUESTSEC;
+
+// create application/json parser
+var jsonParser = bodyParser.json();
+
+// create application/x-www-form-urlencoded parser
+//var urlencodedParser = bodyParser.urlencoded({ extended: false });
+
+// POST to /jot - processes only JSON bodies
+app.post('/jot', jsonParser, (req, res) => {
+    // check to see if valid JSON is being sent
+    if (!req.body || !req.is('application/json')) return res.status(400).send('Bad Request - Please send me JSON to process');
+
+    console.log("Got the name - " + req.body.name);
+
+    let guestToken = new Promise((resolve, reject) => {
+        resolve(
+        jsonwebtoken.sign(
+                {
+                    "sub": randomstring.generate(8),
+                    "name": req.body.name,
+                    "iss": iss
+                }, 
+                Buffer.from(secret, 'base64'), 
+                { 
+                    expiresIn: '1h' 
+                }
+            )
+        );
+        reject("soemtihng went wrong");
+    });
+
+    function fetchOAuth(guestToken) {
+        return new Promise((resolve, reject)=>{
+            fetch('https://api.ciscospark.com/v1/jwt/login', { 
+                method: 'POST',
+                headers: { 'Authorization': guestToken },
+            })
+            .then(res => res.json())
+            .then(json => {
+                console.log("JOT - " + guestToken + " OAuth Token - " + json.token + " Expiry - " + json.expiresIn );
+                //console.log("whiefiuwfwf");
+                resolve(json.token);
+            });
+        });
+    };
+
+    guestToken.then((jot) => {
+        fetchOAuth(jot).then(cot => res.json(cot));
+    });
+
+    //guestToken.then((jot) => {oauthToken(jot).then(cot => res.json(cot))});
+
+});
+
+
+app.get('/', (req, res) => {
+    res.sendFile(`${__dirname}/index.html`);
+    
+});
+
+app.post('/cot', (req, res) => {
+    res.end();
+    //res.sendFile(`${__dirname}/index.html`)
+});
+
+/*
+function fetchOAuth(guestToken) {
+    return new Promise((resolve, reject)=>{
+        fetch('https://api.ciscospark.com/v1/jwt/login', { 
+            method: 'POST',
+            headers: { 'Authorization': guestToken },
+        })
+        .then(res => res.json())
+        .then(json => {
+            console.log("JOT - " + guestToken + " OAuth Token - " + json.token + " Expiry - " + json.expiresIn );
+            //console.log("whiefiuwfwf");
+            resolve(json.token);
+        });
+    });
+}
+*/
+
+app.listen(3000); // <-- comment this line out from your app
+module.exports = app; // export your app so aws-serverless-express can use it

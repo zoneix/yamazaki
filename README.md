@@ -1,0 +1,28 @@
+# Cisco Spark JWT Sample in AWS Lambda
+
+This is a sample Cisco Spark JWT _[JSON Web Tokens]_ Express application written in NodeJS and deployed to AWS Lambda using ClaudiaJS.
+
+\## **Pre-requisites**
+1\. Make sure you have a Free/Paid Tier AWS subscription with access to IAM and Lambda
+2.\ Node.js 6.10 & NPM environment setup on your workstation
+3\. Install and configure ClaudiaJS - https://claudiajs.com/tutorials/installing.html
+
+\## **Optional** - Consider installing and configuring AWS CLI - https://aws.amazon.com/cli/ for more advanced use cases
+
+\## Running the example
+1\. run \`npm install\` to grab the dependencies
+2\. run \`npm run generate-proxy\` to create a simple proxy API for this Express application
+3\. run \`npm run deploy\` to send everything up to AWS Lambda
+
+The third step will print out a URL you can use to access the express app.
+
+\## Updating the app
+
+1\. Change \[\`app.js\`\](app.js)
+2\. (Optionally) use \`npm install <PACKAGE NAME> -S\` to install additional dependencies (always save them to \`package.json\` using `-S`)
+3\. Run \`npm run update\` to send the new version up to AWS. No need to generate the proxy again
+
+\## More information and limitations
+
+See the \[Running Express Apps in AWS Lambda\](https://claudiajs.com/tutorials/serverless-express.html) tutorial.
+
